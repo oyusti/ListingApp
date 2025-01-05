@@ -5,16 +5,32 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreListingRequest;
 use App\Http\Requests\UpdateListingRequest;
 use App\Models\Listing;
+use Illuminate\Database\Eloquent\Builder;
 use Inertia\Inertia;
+use Illuminate\Http\Request;
 
 class ListingController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Inertia::render('Home');
+
+        $listings = Listing::whereHas('user', function(Builder $query){
+            $query->where('role', '!=', 'suspended');
+        })
+        ->with('user')
+        ->where('approved',true)
+        ->filter(request(['search', 'user_id', 'tag']))
+        ->latest()
+        ->paginate(6)
+        ->withQueryString();
+
+        return Inertia::render('Home',[
+            'listings' => $listings,
+            'searchTerms' => $request->search
+        ]);
     }
 
     /**
@@ -22,7 +38,7 @@ class ListingController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Listing/Create');
     }
 
     /**

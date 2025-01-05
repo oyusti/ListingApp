@@ -32,4 +32,25 @@ class Listing extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    /**
+     * Scope a query to only include approved listings.
+     */
+
+    public function scopeFilter($query,array $filters){
+        if($filters['search'] ?? false){
+            $query->where(function ($q){
+                $q->where('title','like','%'.request('search').'%')
+                ->orWhere('desc','like','%'.request('search').'%');
+            });
+        }
+
+        if($filters['user_id'] ?? false){
+            $query->where('user_id',$filters['user_id']);
+        }
+
+        if($filters['tag'] ?? false){
+            $query->where('tags','like','%'.$filters['tag'].'%');
+        }
+    }
 }
