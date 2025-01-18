@@ -30,7 +30,7 @@
     <div class=" bg-white rounded-lg shadow-lg overflow-hidden dark:bg-slate-800 h-full flex flex-col justify-between">
         <div>
             <!-- Image -->
-             <Link href="">
+             <Link :href="route('listings.show', listing.id)">
                 <img 
                 :src="listing.image ? `/storage/${listing.image}` : '/storage/images/listing/2151345410.jpg' "
                 alt="" 
