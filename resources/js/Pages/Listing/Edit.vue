@@ -21,7 +21,8 @@
         tags: props.listing.tags,
         email: props.listing.email,
         link: props.listing.link,
-        image: null
+        image: null,
+        _method: 'PUT'
     })
 </script>
 
@@ -39,7 +40,9 @@
 
         <ErrorMessages :errors="form.errors" />
 
-        <form class="grid grid-cols-2 gap-6">
+        <form 
+            @submit.prevent="form.post(route('listings.update', props.listing.id))"
+            class="grid grid-cols-2 gap-6">
             <div class="space-y-6">
                 <InputField label="Title" icon="heading" v-model="form.title" placeholder="My new Listing" />
                 <InputField label="Tags (separate with comma)" icon="tags" v-model="form.tags" placeholder="one,two,three" />

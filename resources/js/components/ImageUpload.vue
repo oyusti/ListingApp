@@ -22,6 +22,7 @@
         showRevertBtn.value = false;
         preview.value = currentImage;
         overSizedImage.value = false;
+        emit('image', null);
     }
 
 </script>
