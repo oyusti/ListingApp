@@ -17,7 +17,7 @@ class ListingFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => $this->faker->randomElement([1, 2, 3]),
+            'user_id' => $this->faker->randomElement([1, 2, 3, 4, 5, 6]),
             'title' => $this->faker->sentence(10),
             'desc' => $this->faker->paragraph(12),
             'tags' => $this->faker->randomElement([
