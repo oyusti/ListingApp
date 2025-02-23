@@ -14,11 +14,35 @@ import Container from '../../components/Container.vue';
         }
     }
 
+    const toggleAprove = (listing) => {
+
+        let msg =   props.listing.approved 
+                    ? 'Dissaproved the listing' 
+                    : 'Approved the listing';
+
+        if (confirm(msg)) {
+            router.put(route('admin.approve', props.listing.id));
+        }
+    }
+
 </script>
 
 <template>
     <div>
         <Head title="- Listing Detail"/>
+
+        <!-- Admin -->
+         <div v-if="$page.props.auth.user.role === 'admin'"
+            class=" bg-slate-800 text-white mb-6 p-6 rounded-md font-medium flex items-center justify-between">
+            <p>
+                This Listing is {{ listing.approved ? "Approved" : "Disapproved" }}
+            </p>
+            <button @click.prevent="toggleAprove(listing)" class="bg-slate-600 px-3 py-1 rounded-md">
+                {{ listing.approved ? 'disapprove it' : 'Approve it' }}
+            </button>
+
+         </div>
+
         <Container class="flex gap-4">
             <div class="w-1/4 rounded-md overflow-hidden">
                 <img 

@@ -2,10 +2,45 @@
     import PaginationLinks from '../../components/Paginationlinks.vue'
     import RoleSelect from '../../components/RoleSelect.vue'
     import SessionMessages from '../../components/SessionMessages.vue'
+    import InputField from '../../components/InputField.vue';
+    import { Link, router, useForm } from '@inertiajs/vue3';
+
+    const params = route().params
+
     defineProps({
         users:Object,
         status:String
     });
+
+    const form = useForm({
+        search: params.search
+    });
+
+    const search = () => {
+        router.get(route('admin.index'), {
+            search: form.search, 
+            user_role: params.user_role
+        });
+    }
+
+    const toggleRole = (e) => {
+        if (e.target.checked) {
+            router.get(
+                route('admin.index',{
+                search:params.search,
+                user_role: 'suspended'
+                })
+            );
+        } else {
+            router.get(
+                route('admin.index', {
+                search:params.search,
+                user_role: null
+                }) 
+            );
+        }
+    }
+
 </script>
 
 <template>
@@ -14,7 +49,47 @@
     <SessionMessages :status="status" />
 
     <!-- Heading -->
-    <div>Heading</div>
+    <div class=" flex items-end justify-between mb-4">
+        <div class=" flex items-end gap-2">
+            <!-- Search form -->
+             <form @submit.prevent="search">
+                <InputField 
+                    type="search" 
+                    label=""
+                    icon="magnifying-glass"
+                    placeholder="Search..."
+                    v-model="form.search" 
+                />
+            </form>
+
+            <Link
+                class=" px-2 py-1 rounded-md bg-indigo-500 text-white flex items-center gap-2"
+                v-if="params.search"
+                :href="route('admin.index', { ...params, search: null, page: null })">
+                {{ params.search }}
+                <i class="fa-solid fa-xmark"></i>
+            </Link>
+        </div>
+
+        <!-- Toggle role btn -->
+        <div class=" flex items-center gap-1 text-xs hover:bg-slate-300 dark:hover:bg-slate-800 px-2 py-1 rounded-md">
+            <input 
+                @input="toggleRole"
+                :checked="params.user_role"
+                type="checkbox" 
+                id="toggleRole"
+                class=" rounded-md border-1 outline-0 text-indigo-500 ring-indigo-500 border-slate-700 cursor-pointer" 
+            />
+            <label 
+                for="toggleRole"
+                class=" block text-sm font-medium text-slate-700 dark:text-slate-300 cursor-pointer px-1"
+            >
+                Show Suspended User
+            </label>
+        </div>
+
+
+    </div>
     
 
     <!-- Table -->
@@ -53,7 +128,10 @@
                 </td>
 
                 <td class="w-1/6 py-5 px-3 text-right">
-                    Link View
+                    <Link 
+                        class="fa-solid fa-up-right-from-square px-3 text-indigo-400"
+                        :href="route('user.show', user.id)">
+                    </Link> 
                 </td>
             </tr>
         </tbody>

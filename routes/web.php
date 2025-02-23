@@ -28,7 +28,9 @@ Route::resource('listings', ListingController::class)->except('index');
 Route::middleware(['auth', 'verified', Admin::class])
     ->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+    Route::get('users/{user}', [AdminController::class,'show'])->name('user.show');
     Route::put('/admin/{user}/role', [AdminController::class, 'role'])->name('admin.role');
+    Route::put('/admin/{listing}/approve',[Admincontroller::class, 'approve'])->name('admin.approve');
 });
 
 
